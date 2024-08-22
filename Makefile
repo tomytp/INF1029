@@ -1,5 +1,5 @@
 CC = gcc
-PROGRAM = test
+PROGRAM = bin/test
 HEIGHT = 16
 WIDTH = 16
 
