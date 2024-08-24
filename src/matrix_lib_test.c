@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
 
     gettimeofday(&overall_start, NULL);
 
-    print_matrix(matrixA);
+    // print_matrix(matrixA);
 
     gettimeofday(&function_start, NULL);
     if (!scalar_matrix_mult(scalar, matrixA)) {
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
     gettimeofday(&function_stop, NULL);
     printf("Scalar Mult duration: %f ms\n", timedifference_msec(function_start, function_stop));
     write_matrix_to_file(matrixA, argv[8]);
-    print_matrix(matrixA);
+    // print_matrix(matrixA);
 
 
     gettimeofday(&function_start, NULL);
@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
     gettimeofday(&function_stop, NULL);
     printf("Matrix Mult duration: %f ms\n", timedifference_msec(function_start, function_stop));
     write_matrix_to_file(matrixC, argv[9]);
-    print_matrix(matrixC);
+    // print_matrix(matrixC);
 
     gettimeofday(&overall_stop, NULL);
     printf("Total duration: %f ms\n", timedifference_msec(overall_start, overall_stop));
