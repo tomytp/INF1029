@@ -20,7 +20,7 @@ int scalar_matrix_mult(float scalar_value, Matrix *matrix) {
 }
 
 
-int matrix_matrix_mult(Matrix *matrixA, Matrix *matrixB, Matrix *matrixC) {
+int matrix_matrix_mult(Matrix* matrixA, Matrix* matrixB, Matrix* matrixC){
     if (!isValidMatrix(matrixA) || !isValidMatrix(matrixB) || !isValidMatrix(matrixC) ||
         matrixA->width != matrixB->height || 
         matrixC->height != matrixA->height || 
@@ -28,16 +28,16 @@ int matrix_matrix_mult(Matrix *matrixA, Matrix *matrixB, Matrix *matrixC) {
         return 0;
     }
 
-    for (unsigned long int i = 0; i < matrixA->height; i++) {
-        int imult = i * matrixA->width;
-        for (unsigned long int j = 0; j < matrixB->width; j++) {
-            int ij = i * matrixC->width + j;
-            for (unsigned long int k = 0; k < matrixA->width; k++) {
-                matrixC->rows[ij] += matrixA->rows[imult + k] * matrixB->rows[k * matrixB->width + j];
+    for (int i = 0; i < matrixC->height; i++) {
+        int imult = i * matrixC->width;
+        for (int k = 0; k < matrixA->width; k++) {
+            int ik = i * matrixA->width + k;
+            int kmult = k * matrixB->width;
+            for (int j = 0; j < matrixC->width; j++) {
+                matrixC->rows[imult + j] += matrixA->rows[ik] * matrixB->rows[kmult + j];
             }
         }
     }
-
     return 1;
 }
 

@@ -7,30 +7,43 @@ INPUT_A = data/input_a.puc
 INPUT_B = data/input_b.puc
 OUTPUT_1 = data/output_1.puc
 OUTPUT_2 = data/output_2.puc
+LIB_FILES = matrix_lib.c matrix_lib_columns.c
+LIB = matrix_lib
 
+all: run_all
 
-all: run
+.PHONY: run_all build_all benchmark clean
 
-.PHONY: run build 
+build_all: $(LIB_FILES:%.c=bin/$(PROGRAM)_%)
 
-build: src/matrix_lib.c src/timer.c src/matrix_lib_test.c
-	$(CC) $(CFLAGS) -o bin/$(PROGRAM) src/matrix_lib.c src/timer.c src/matrix_lib_test.c
+bin/$(PROGRAM)_%: src/%.c src/timer.c src/matrix_lib_test.c
+	@mkdir -p bin
+	$(CC) $(CFLAGS) -o $@ $^
+
+run_all: build_all
+	@for lib in $(LIB_FILES:%.c=%); do \
+		$(MAKE) run LIB=$$lib --no-print-directory; \
+	done
 
 run:
-	@python3 input_generator.py $(HEIGHT) $(WIDTH) data/input_a.puc -v 2
-	@python3 input_generator.py $(HEIGHT) $(WIDTH) data/input_b.puc -v 5
-	@echo "Running for size=$(HEIGHT)x$(WIDTH) / algorithm=NotOptimized"
-	@./bin/$(PROGRAM) $(SCALAR) $(HEIGHT) $(WIDTH) $(HEIGHT) $(WIDTH) $(INPUT_A) $(INPUT_B) $(OUTPUT_1) $(OUTPUT_2)
-	@python3 check_results.py $(HEIGHT) $(WIDTH) $(SCALAR) $(INPUT_A) $(INPUT_B) $(OUTPUT_2)
+	@python3 input_generator.py $(HEIGHT) $(WIDTH) $(INPUT_A) -v 2
+	@python3 input_generator.py $(HEIGHT) $(WIDTH) $(INPUT_B) -v 5
+	@echo "Running for size=$(HEIGHT)x$(WIDTH) / algorithm=$(LIB)"
+	@./bin/$(PROGRAM)_$(LIB) $(SCALAR) $(HEIGHT) $(WIDTH) $(HEIGHT) $(WIDTH) $(INPUT_A) $(INPUT_B) $(OUTPUT_1) $(OUTPUT_2)
+	@python3 check_results.py $(HEIGHT) $(WIDTH) $(SCALAR) $(INPUT_A) $(INPUT_B) $(OUTPUT_2) $(LIB)
 
 benchmark:
-	$(MAKE) build --no-print-directory
+	@$(MAKE) clean
+	@$(MAKE) build_all --no-print-directory
 	@rm -f benchmark_output.txt
-
 	@for val in 64 128 256 512 1024 2048; do \
-		$(MAKE) run HEIGHT=$$val WIDTH=$$val --no-print-directory | tee -a benchmark_output.txt; \
+		for lib in $(LIB_FILES:%.c=%); do \
+			$(MAKE) run HEIGHT=$$val WIDTH=$$val LIB=$$lib --no-print-directory | tee -a benchmark_output.txt; \
+		done; \
 		clear; \
 		python3 plot_benchmark.py < benchmark_output.txt; \
 	done
-
 	@rm -f benchmark_output.txt
+
+clean:
+	rm -f bin/$(PROGRAM)_*
