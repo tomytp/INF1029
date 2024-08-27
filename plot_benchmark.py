@@ -6,6 +6,7 @@ def format_subplot(subplot, title, size_indices, sizes, algorithms, data):
     subplot.title(title)
     subplot.xlabel("Matrix Size")
     subplot.ylabel("Time (ms)")
+    # subplot.yscale("log")
     subplot.xticks(size_indices, sizes)
 
     for algorithm in algorithms:

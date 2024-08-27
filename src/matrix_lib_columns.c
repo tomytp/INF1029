@@ -28,15 +28,17 @@ int matrix_matrix_mult(Matrix* matrixA, Matrix* matrixB, Matrix* matrixC){
         return 0;
     }
 
+    int imult = 0, kmult, ik;
     for (int i = 0; i < matrixC->height; i++) {
-        int imult = i * matrixC->width;
+        kmult = 0;
         for (int k = 0; k < matrixA->width; k++) {
-            int ik = i * matrixA->width + k;
-            int kmult = k * matrixB->width;
+            ik = imult + k;
             for (int j = 0; j < matrixC->width; j++) {
                 matrixC->rows[imult + j] += matrixA->rows[ik] * matrixB->rows[kmult + j];
             }
+            kmult += matrixB->width;
         }
+        imult += matrixC->width;
     }
     return 1;
 }

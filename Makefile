@@ -36,7 +36,7 @@ benchmark:
 	@$(MAKE) clean
 	@$(MAKE) build_all --no-print-directory
 	@rm -f benchmark_output.txt
-	@for val in 64 128 256 512 1024 2048; do \
+	@for val in 512 1024 2048; do \
 		for lib in $(LIB_FILES:%.c=%); do \
 			$(MAKE) run HEIGHT=$$val WIDTH=$$val LIB=$$lib --no-print-directory | tee -a benchmark_output.txt; \
 		done; \
