@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "matrix_lib.h"
 #include "timer.h"
 
@@ -76,6 +77,7 @@ int main(int argc, char *argv[]) {
 
     read_matrix_from_file(matrixA, argv[6]);
     read_matrix_from_file(matrixB, argv[7]);
+    memset(matrixC->rows, 0, matrixC->height * matrixC->width * sizeof(float));
 
     struct timeval function_start, function_stop, overall_start, overall_stop;
 
