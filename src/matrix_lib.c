@@ -28,17 +28,28 @@ int matrix_matrix_mult(Matrix *matrixA, Matrix *matrixB, Matrix *matrixC) {
         return 0;
     }
 
-    int imult = 0;
-    for (unsigned long int i = 0; i < matrixA->height; i++) {
-        for (unsigned long int j = 0; j < matrixB->width; j++) {
-            int ij = imult + j;
-            int kmult = 0;
-            for (unsigned long int k = 0; k < matrixA->width; k++) {
-                matrixC->rows[ij] += matrixA->rows[imult + k] * matrixB->rows[kmult + j];
-                kmult += matrixB->width;
+    unsigned long int a_height = matrixA->height;
+    unsigned long int a_width = matrixA->width;
+    unsigned long int b_width = matrixB->width;
+
+    float *a_row = matrixA->rows, *c_row = matrixC->rows;
+    for (unsigned long int i = 0; i < a_height; i++) {
+        float *b_col = matrixB->rows;
+
+        for (unsigned long int j = 0; j < b_width; j++) {
+            float sum = 0;
+            float *a_elem = a_row;
+            float *b_elem = b_col++;
+
+            for (unsigned long int k = 0; k < a_width; k++) {
+                sum += (*a_elem++) * (*b_elem);
+                b_elem += b_width;
             }
+
+            *c_row++ = sum;
         }
-        imult += matrixA->width;
+
+        a_row += a_width;
     }
 
     return 1;

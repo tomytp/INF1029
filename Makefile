@@ -1,7 +1,7 @@
 CC = gcc
 PROGRAM = test
-HEIGHT = 16
-WIDTH = 16
+HEIGHT = 512
+WIDTH = 512
 SCALAR = 12.3
 INPUT_A = data/input_a.puc
 INPUT_B = data/input_b.puc
