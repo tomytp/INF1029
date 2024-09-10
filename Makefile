@@ -2,7 +2,7 @@ CC = gcc
 PROGRAM = test
 HEIGHT = 512
 WIDTH = 512
-SCALAR = 12.3
+SCALAR = 5.0
 LIB_FILES = matrix_lib.c matrix_lib_columns.c
 LIB = matrix_lib
 
