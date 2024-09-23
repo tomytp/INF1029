@@ -30,10 +30,10 @@ int store_matrix(Matrix *mat, const char *filename) {
 }
 
 Matrix *initialize_Matrix(unsigned long int height, unsigned long int width) {
-    Matrix *matrix = (Matrix*) malloc(sizeof(Matrix));
+    Matrix *matrix = (Matrix*) aligned_alloc(32, sizeof(Matrix));
     matrix->height = height;
     matrix->width = width;
-    matrix->rows = (float *) malloc(height * width * sizeof(float));
+    matrix->rows = (float *) aligned_alloc(32, sizeof(float) * height * width);
     if (matrix->rows == NULL) {
         printf("Allocation error.\n");
         exit(1);
