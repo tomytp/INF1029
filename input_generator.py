@@ -1,7 +1,7 @@
 import numpy
 import argparse
 
-def main(width: int, height: int, output_path: str, value: int | None ) -> None:
+def main(width: int, height: int, output_path: str, value: int | None) -> None:
     total_cells = width * height
     
     if value is not None:

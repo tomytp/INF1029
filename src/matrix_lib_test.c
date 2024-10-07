@@ -30,10 +30,10 @@ int store_matrix(Matrix *mat, const char *filename) {
 }
 
 Matrix *initialize_Matrix(unsigned long int height, unsigned long int width) {
-    Matrix *matrix = (Matrix*) malloc(sizeof(Matrix));
+    Matrix *matrix = (Matrix*) aligned_alloc(32, sizeof(Matrix));
     matrix->height = height;
     matrix->width = width;
-    matrix->rows = (float *) malloc(height * width * sizeof(float));
+    matrix->rows = (float *) aligned_alloc(32, sizeof(float) * height * width);
     if (matrix->rows == NULL) {
         printf("Allocation error.\n");
         exit(1);
@@ -82,8 +82,8 @@ int check_errors(struct matrix *matrix, float scalar_value) {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 10) {
-        printf("Usage: %s <scalar> <heightA> <widthA> <hightB> <widthB> <inputA> <inputB> <outputA> <outputB>\n", argv[0]);
+    if (argc != 11) {
+        printf("Usage: %s <scalar> <heightA> <widthA> <hightB> <widthB> <threadCount> <inputA> <inputB> <outputA> <outputB>\n", argv[0]);
         return 1;
     }
 
@@ -94,19 +94,23 @@ int main(int argc, char *argv[]) {
     unsigned long int widthA = strtoul(argv[3], NULL, 10);
     unsigned long int heightB = strtoul(argv[4], NULL, 10);
     unsigned long int widthB = strtoul(argv[5], NULL, 10);
+    unsigned long int threadCount = strtoul(argv[6], NULL, 10);
+
 
     if (widthA != heightB) {
         printf("Incompatible Matrixes (widthA != heightB).\n");
         return 1;
     }
 
+    set_number_threads(threadCount);
+
     Matrix *matrixA, *matrixB, *matrixC;
     matrixA = initialize_Matrix(heightA, widthA);
     matrixB = initialize_Matrix(heightB, widthB);
     matrixC = initialize_Matrix(heightA, widthB);
 
-    load_matrix(matrixA, argv[6]);
-    load_matrix(matrixB, argv[7]);
+    load_matrix(matrixA, argv[7]);
+    load_matrix(matrixB, argv[8]);
     memset(matrixC->rows, 0, matrixC->height * matrixC->width * sizeof(float));
 
 
@@ -126,7 +130,7 @@ int main(int argc, char *argv[]) {
 
     /* Write first result */
     printf("Writing first result: %s...\n", argv[8]);
-    if (!store_matrix(matrixA, argv[8]))
+    if (!store_matrix(matrixA, argv[9]))
     {
         printf("%s: failed to write first result to file.", argv[0]);
         return 1;
@@ -149,7 +153,7 @@ int main(int argc, char *argv[]) {
 
     /* Write second result */
     printf("Writing second result: %s...\n", argv[9]);
-    if (!store_matrix(matrixC, argv[9]))
+    if (!store_matrix(matrixC, argv[10]))
     {
         printf("%s: failed to write second result to file.", argv[0]);
         return 1;

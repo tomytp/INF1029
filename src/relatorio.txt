@@ -1,0 +1,2 @@
+compilacao:
+    gcc -std=c11 -mfma -pthread -o bin/test_matrix_lib_amx_thread src/matrix_lib_amx_thread.c src/timer.c src/matrix_lib_test.c
