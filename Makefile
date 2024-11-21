@@ -4,7 +4,7 @@ PROGRAM = test
 HEIGHT = 512
 WIDTH = 512
 SCALAR = 5.0
-THREAD_COUNT = 8	
+THREAD_COUNT = 8
 LIB = matrix_lib_amx_thread
 
 define INPUT_A
@@ -33,11 +33,6 @@ bin/$(PROGRAM)_%: src/%.c src/timer.c src/matrix_lib_test.c
 	@mkdir -p bin
 	$(CC) $(CFLAGS) -o $@ $^
 
-run_all: build_all
-	@for lib in $(LIB_FILES:%.c=%); do \
-		$(MAKE) run LIB=$$lib --no-print-directory; \
-	done
-
 1024:
 	$(MAKE) run HEIGHT=1024 WIDTH=1024
 
@@ -45,6 +40,7 @@ run_all: build_all
 	$(MAKE) run HEIGHT=2048 WIDTH=2048
 
 run:
+	@mkdir -p data
 	@if [ ! -f $(INPUT_A) ]; then \
 	    python input_generator.py $(HEIGHT) $(WIDTH) $(INPUT_A) -v 2; \
 	fi	
@@ -53,7 +49,7 @@ run:
 	fi
 
 	@echo "Running for size=$(HEIGHT)x$(WIDTH) / algorithm=$(LIB)"
-	@./bin/$(PROGRAM)_$(LIB) $(SCALAR) $(HEIGHT) $(WIDTH) $(HEIGHT) $(WIDTH) $(THREAD_COUNT) $(INPUT_A) $(INPUT_B) $(OUTPUT_1) $(OUTPUT_2)
+	./bin/$(PROGRAM)_$(LIB) $(SCALAR) $(HEIGHT) $(WIDTH) $(HEIGHT) $(WIDTH) $(THREAD_COUNT) $(INPUT_A) $(INPUT_B) $(OUTPUT_1) $(OUTPUT_2)
 	@python check_results.py $(HEIGHT) $(WIDTH) $(SCALAR) $(INPUT_A) $(INPUT_B) $(OUTPUT_2) $(LIB)
 
 clean:
